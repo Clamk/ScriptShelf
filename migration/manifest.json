@@ -1,0 +1,103 @@
+{
+  "description": "Migration record: where each file came from and its SHA-256 at migration time. Historical record; later intentional edits to a script are expected to change its hash.",
+  "migrated": "2026-11-07",
+  "files": [
+    {
+      "source": "Chat upload, 2026-11-07 (written in chat 'PowerShell microplate image grouping', 2026-11-06)",
+      "original_filename": "b31b3bce-Group-ImagesByWell.ps1",
+      "destination": "scripts/powershell/group-images-by-well/Group-ImagesByWell.ps1",
+      "size_bytes": 5305,
+      "sha256_before": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
+      "sha256_after": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
+      "status": "verified",
+      "note": ""
+    },
+    {
+      "source": "File written in this chat, 2026-11-05 (session working copy)",
+      "original_filename": "Composite_Batch.ijm",
+      "destination": "scripts/imagej/composite-batch/Composite_Batch.ijm",
+      "size_bytes": 39838,
+      "sha256_before": "3319373c36a336ca4543089f1570c1b2fcdd60066cdff73fcf22a44b380564f3",
+      "sha256_after": "3319373c36a336ca4543089f1570c1b2fcdd60066cdff73fcf22a44b380564f3",
+      "status": "verified",
+      "note": ""
+    },
+    {
+      "source": "File written in this chat, 2026-11-05/07 (session working copy)",
+      "original_filename": "README.md",
+      "destination": "scripts/imagej/composite-batch/README.md",
+      "size_bytes": 3861,
+      "sha256_before": "718f634a89936fcc4614fdf64512c24c8f15331cce6cb955a3ea38e81b0e256f",
+      "sha256_after": "718f634a89936fcc4614fdf64512c24c8f15331cce6cb955a3ea38e81b0e256f",
+      "status": "verified",
+      "note": "Supporting documentation. Mentions Group-ImagesByWell.ps1 as a companion; that script lives in scripts/powershell/."
+    },
+    {
+      "source": "Script Shelf artifact database, document example-fiji-batch-tiff (FJ-001)",
+      "original_filename": null,
+      "destination": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
+      "size_bytes": 464,
+      "sha256_before": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
+      "sha256_after": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
+      "status": "transcribed",
+      "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
+    },
+    {
+      "source": "Script Shelf artifact database, document example-ps-folder-sizes (PS-001)",
+      "original_filename": null,
+      "destination": "scripts/powershell/folder-sizes/folder_sizes.ps1",
+      "size_bytes": 429,
+      "sha256_before": "584474467c3ce0d8cc5795e24b33a529e05c5176dd781ad8805ff0547f8194b9",
+      "sha256_after": "584474467c3ce0d8cc5795e24b33a529e05c5176dd781ad8805ff0547f8194b9",
+      "status": "transcribed",
+      "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
+    },
+    {
+      "source": "Script Shelf artifact database, document example-py-merge-csv (PY-001)",
+      "original_filename": null,
+      "destination": "scripts/python/merge-csv-files/merge_csv_files.py",
+      "size_bytes": 534,
+      "sha256_before": "327db7bed8822857fb8af81afb3645e022f7725d92180ccfcc54015fcedc2028",
+      "sha256_after": "327db7bed8822857fb8af81afb3645e022f7725d92180ccfcc54015fcedc2028",
+      "status": "transcribed",
+      "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
+    }
+  ],
+  "not_migrated_yet": [
+    {
+      "item": "Overlay_Viewer.ijm",
+      "where": "claude.ai artifact 'Overlay Viewer Macro' (…Q7Yq)",
+      "reason": "Waiting for the original file"
+    },
+    {
+      "item": "Overlay_Viewer_v2.ijm",
+      "where": "claude.ai artifact 'Overlay Viewer Macro' (…Vh8Q)",
+      "reason": "Waiting for the original file"
+    },
+    {
+      "item": "modPanier, modEquiperPanier, ThisWorkbook (VBA)",
+      "where": "claude.ai artifact 'Code du Panier'",
+      "reason": "Waiting for the original files; encoding to decide"
+    },
+    {
+      "item": "Report_Image_Browser.py (+ README, tests, archive)",
+      "where": "past chat 'Fiji image processing macro GUI'",
+      "reason": "Not reachable from this session"
+    },
+    {
+      "item": "Move-ExportToNetwork.ps1 + Lancer_Transfert.bat",
+      "where": "past chat 'Automated file transfer script'",
+      "reason": "Not reachable; working copy holds internal network paths"
+    },
+    {
+      "item": "move_tiffs_to_images.ps1",
+      "where": "past chat 'Script snippet library UI'",
+      "reason": "Not reachable from this session"
+    },
+    {
+      "item": "Repo variants of the three examples (folder_sizes.ps1 with -Root, merge_csv_files.py with prompt)",
+      "where": "past chat 'Script snippet library UI'",
+      "reason": "Not reachable from this session"
+    }
+  ]
+}
