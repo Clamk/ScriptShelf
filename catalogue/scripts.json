@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "title": "Script Shelf",
+  "description": "Scripts for high-content imaging and everyday lab data chores: Fiji macros, PowerShell and Python.",
+  "repository": {
+    "owner": "Clamk",
+    "name": "ScriptShelf",
+    "branch": "main"
+  },
+  "categories": [
+    { "id": "imagej", "label": "ImageJ / Fiji" },
+    { "id": "powershell", "label": "PowerShell" },
+    { "id": "python", "label": "Python" }
+  ],
+  "scripts": [
+    {
+      "id": "composite-batch",
+      "name": "Composite Batch",
+      "category": "imagej",
+      "language": "ImageJ macro",
+      "summary": "Batch-export flattened colour composites from single-channel high-content images, such as CX7 .C01 exports.",
+      "description": "Lists the image files in a source folder (optionally with well subfolders) and assigns each file to a channel using a text per channel, for example a name containing \"DAPI\". Files in the same folder whose names are identical once the channel text is removed form one set, which becomes one composite. Each channel gets one colour and one fixed display range applied to every set, so intensities stay comparable. The ranges can be set automatically from randomly picked sets or tuned by eye on a preview. Each set is exported as a flattened RGB composite, with optional single-channel images, scale bar and burned-in label, and a run log is written next to the outputs.",
+      "tags": ["composite", "batch", "export", "cx7", "hcs", "lut"],
+      "path": "scripts/imagej/composite-batch/Composite_Batch.ijm",
+      "extension": ".ijm",
+      "supporting_files": [
+        { "path": "scripts/imagej/composite-batch/README.md", "label": "README" }
+      ],
+      "requirements": [
+        "Fiji / ImageJ 1.53t or newer",
+        "Bio-Formats (bundled with Fiji) to open non-TIFF files such as Cellomics .C01"
+      ],
+      "usage": [
+        "In Fiji: Plugins > Macros > Run... and choose Composite_Batch.ijm. For a menu entry, copy the file to Fiji.app/plugins/ and restart Fiji.",
+        "Folders: choose the source folder (tick 'Include subfolders' for plate\\well layouts), the destination folder, the file extensions (default .C01) and the number of channels.",
+        "Channel rules: type one text per channel (e.g. DAPI, GFP), then check the grouping summary: counts per channel, complete and incomplete sets, an example set.",
+        "Colours and ranges: one LUT and a fixed min/max per channel. 'Auto' derives them from N random sets (median or mean, default 20); 'Preview' opens a set to tune with Brightness/Contrast.",
+        "Export: format (PNG, TIFF, JPEG), name suffix, folder structure, overwrite, optional single-channel images, scale bar and label."
+      ],
+      "inputs": [
+        "Single-channel images, one file per channel (.C01 by default, .tif/.tiff also), in one folder or in plate\\well subfolders",
+        "Files of the same field share their name apart from the channel text"
+      ],
+      "outputs": [
+        "<name><suffix>.png|tif|jpg: flattened RGB composite",
+        "<name>_<channel>.<ext>: optional single-channel images in their colour",
+        "CompositeBatch_log_<date-time>.txt: file list, grouping, all settings, every file written or skipped"
+      ],
+      "warnings": [
+        "Not yet run in Fiji: written on 2026-11-05 without access to Fiji.",
+        "1 to 7 channels. Images of a set must have the same size and bit depth; other sets are skipped and logged.",
+        "Stacks: only the first plane is used.",
+        "JPEG quality follows Edit > Options > Input/Output."
+      ],
+      "tested_on": null,
+      "example": false,
+      "created": "2026-11-05",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "group-images-by-well",
+      "name": "Group images by well",
+      "category": "powershell",
+      "language": "PowerShell",
+      "summary": "Sort a flat CX7 / HCS Studio image export into one subfolder per well.",
+      "description": "Reads the well ID from each file name, following the HCS Studio pattern <plate>_<well>f<field>d<channel> (e.g. ..._A04f00d1), and moves the file into a folder named after that well, created next to the images. Well IDs of one or two letters plus two digits are recognised, so 1536-well IDs such as AF48 work too. A summary at the end lists the files moved per well, in plate order.",
+      "tags": ["cx7", "hcs studio", "files", "wells", "sorting"],
+      "path": "scripts/powershell/group-images-by-well/Group-ImagesByWell.ps1",
+      "extension": ".ps1",
+      "supporting_files": [],
+      "requirements": [
+        "Windows PowerShell 2.0 (Windows 7) or later"
+      ],
+      "usage": [
+        "Preview first (moves nothing): .\\Group-ImagesByWell.ps1 -Path \"D:\\Exports\\Plate1\" -WhatIf",
+        "Then run the same command without -WhatIf.",
+        "For files other than .tif/.tiff, pass the extensions, e.g. -Extensions .C01",
+        "If Windows blocks scripts: powershell -ExecutionPolicy Bypass -File .\\Group-ImagesByWell.ps1 -Path \"D:\\Exports\\Plate1\""
+      ],
+      "inputs": [
+        "-Path: folder containing the images (default: current folder)",
+        "-Extensions: file extensions to process (default: .tif, .tiff)"
+      ],
+      "outputs": [
+        "One subfolder per well, with the matching files moved into it",
+        "Console summary: wells, files moved, skipped or failed, files not recognised, files per well"
+      ],
+      "warnings": [
+        "Moves files rather than copying them.",
+        "Only files directly inside -Path are processed; subfolders are ignored.",
+        "Never overwrites: a file already in its well folder is skipped.",
+        "Files without a recognisable well ID are left in place and listed.",
+        "Images from several plates in one folder are grouped into the same well folders; a warning names the plates."
+      ],
+      "tested_on": null,
+      "example": false,
+      "created": "2026-11-06",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "batch-convert-to-tiff",
+      "name": "Batch convert a folder of images to TIFF",
+      "category": "imagej",
+      "language": "ImageJ macro",
+      "summary": "Open every file in a folder and save it as .tif in another folder.",
+      "description": "Asks for an input and an output folder, opens every file in the input folder and saves it as .tif in the output folder. Subfolders are skipped. Runs in batch mode, so no windows pop up.",
+      "tags": ["batch", "files", "conversion"],
+      "path": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
+      "extension": ".ijm",
+      "supporting_files": [],
+      "requirements": [],
+      "usage": [
+        "Run the macro in Fiji, then choose the input folder and the output folder when asked."
+      ],
+      "inputs": ["Input folder of images"],
+      "outputs": ["One .tif per input file, in the output folder"],
+      "warnings": [
+        "Example snippet seeded when the Script Shelf was created; never tested."
+      ],
+      "tested_on": null,
+      "example": true,
+      "created": "2026-10-22",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "folder-sizes",
+      "name": "Folder sizes, largest first",
+      "category": "powershell",
+      "language": "PowerShell",
+      "summary": "List each subfolder of a folder with its total size in GB, largest first.",
+      "description": "Lists each subfolder of $root with its total size in GB, sorted largest first. Handy before cleaning a data drive.",
+      "tags": ["disk space", "files"],
+      "path": "scripts/powershell/folder-sizes/folder_sizes.ps1",
+      "extension": ".ps1",
+      "supporting_files": [],
+      "requirements": [
+        "PowerShell 3.0 or newer (Windows 7 ships with 2.0)"
+      ],
+      "usage": [
+        "Set $root at the top of the script to the folder to measure, then run it."
+      ],
+      "inputs": ["$root: folder whose subfolders are measured"],
+      "outputs": ["Table of subfolders with their size in GB"],
+      "warnings": [
+        "Example snippet seeded when the Script Shelf was created; never tested."
+      ],
+      "tested_on": null,
+      "example": true,
+      "created": "2026-10-22",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "merge-csv-files",
+      "name": "Merge all CSV files in a folder into one table",
+      "category": "python",
+      "language": "Python",
+      "summary": "Combine every CSV in a folder into combined.csv, tagging each row with its source file.",
+      "description": "Reads every .csv in the folder, adds a source_file column so you know where each row came from, and writes combined.csv. Skips its own output file if you run it twice.",
+      "tags": ["csv", "pandas", "data"],
+      "path": "scripts/python/merge-csv-files/merge_csv_files.py",
+      "extension": ".py",
+      "supporting_files": [],
+      "requirements": [
+        "Python 3",
+        "pandas"
+      ],
+      "usage": [
+        "Set the folder path near the top of the script, then run it with Python."
+      ],
+      "inputs": ["Folder of .csv files"],
+      "outputs": ["combined.csv in the same folder"],
+      "warnings": [
+        "Example snippet seeded when the Script Shelf was created; never tested."
+      ],
+      "tested_on": null,
+      "example": true,
+      "created": "2026-10-22",
+      "added": "2026-11-07"
+    }
+  ]
+}
