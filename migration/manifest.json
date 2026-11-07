@@ -1,16 +1,26 @@
 {
-  "description": "Migration record: where each file came from and its SHA-256 at migration time. Historical record; later intentional edits to a script are expected to change its hash.",
+  "description": "Migration record: where each file came from and its SHA-256 at migration time. Status: verified = byte copy of an original file; extracted = pulled by script from a saved transcript; reconstructed = first version + recorded edits replayed; transcribed = copied from displayed text (no byte-level source). Later intentional edits to a script are expected to change its hash.",
   "migrated": "2026-11-07",
   "files": [
     {
-      "source": "Chat upload, 2026-11-07 (written in chat 'PowerShell microplate image grouping', 2026-11-06)",
-      "original_filename": "b31b3bce-Group-ImagesByWell.ps1",
-      "destination": "scripts/powershell/group-images-by-well/Group-ImagesByWell.ps1",
-      "size_bytes": 5305,
-      "sha256_before": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
-      "sha256_after": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
-      "status": "verified",
-      "note": ""
+      "source": "past chat 'Script snippet library UI' (2026-10-27)",
+      "original_filename": "batch_convert_to_tiff.ijm",
+      "destination": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
+      "size_bytes": 781,
+      "sha256_before": "2e6bbecd4567fa74f3aed16cd65e32e7d45a5c93af7aaccff80162c065a8336d",
+      "sha256_after": "2e6bbecd4567fa74f3aed16cd65e32e7d45a5c93af7aaccff80162c065a8336d",
+      "status": "extracted",
+      "note": "Extracted by script from the chat transcript (tool result saved to disk) and HTML-unescaped; last Write of the file in that chat. Before-hash = extracted text."
+    },
+    {
+      "source": "Script Shelf artifact database, document example-fiji-batch-tiff (FJ-001)",
+      "original_filename": null,
+      "destination": "scripts/imagej/batch-convert-to-tiff/versions/2026-10-22/batch_convert_to_tiff.ijm",
+      "size_bytes": 464,
+      "sha256_before": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
+      "sha256_after": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
+      "status": "transcribed",
+      "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
     },
     {
       "source": "File written in this chat, 2026-11-05 (session working copy)",
@@ -33,19 +43,39 @@
       "note": "Supporting documentation. Mentions Group-ImagesByWell.ps1 as a companion; that script lives in scripts/powershell/."
     },
     {
-      "source": "Script Shelf artifact database, document example-fiji-batch-tiff (FJ-001)",
-      "original_filename": null,
-      "destination": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
-      "size_bytes": 464,
-      "sha256_before": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
-      "sha256_after": "743047a6401f04a980225e0926d49935b3df37b987501220af4679f7c8e43b3f",
+      "source": "claude.ai artifact 'Overlay Viewer Macro', 2026-10-19",
+      "original_filename": "Overlay_Viewer.ijm",
+      "destination": "scripts/imagej/overlay-viewer/Overlay_Viewer.ijm",
+      "size_bytes": 22779,
+      "sha256_before": "d426abe232020ed3d43ab057d16da95e2f6f045af3bda02e2440e71cb33da351",
+      "sha256_after": "d426abe232020ed3d43ab057d16da95e2f6f045af3bda02e2440e71cb33da351",
       "status": "transcribed",
-      "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
+      "note": "Code copied from the claude.ai artifact page source (no file exists). Not byte-verifiable here; check the line count shown on the artifact page. Decoded from HTML entities; the page shows no line count."
+    },
+    {
+      "source": "claude.ai artifact 'Overlay Viewer Macro', 2026-10-19",
+      "original_filename": "Overlay_Viewer_v2.ijm",
+      "destination": "scripts/imagej/overlay-viewer/Overlay_Viewer_v2.ijm",
+      "size_bytes": 10707,
+      "sha256_before": "49f8fb8f23df36f8e7e63ff176bec82ba2bc88922059f6db8c4ac72f63252252",
+      "sha256_after": "49f8fb8f23df36f8e7e63ff176bec82ba2bc88922059f6db8c4ac72f63252252",
+      "status": "transcribed",
+      "note": "Code copied from the claude.ai artifact page source (no file exists). Not byte-verifiable here; check the line count shown on the artifact page. Page shows 301 lines, 10.5 KB."
+    },
+    {
+      "source": "past chat 'Script snippet library UI' (2026-10-27)",
+      "original_filename": "folder_sizes.ps1",
+      "destination": "scripts/powershell/folder-sizes/folder_sizes.ps1",
+      "size_bytes": 747,
+      "sha256_before": "7ee6d23c01f677141011f182f32b4d7f3a10ebc76e523e99d8f0169c26c9cd78",
+      "sha256_after": "7ee6d23c01f677141011f182f32b4d7f3a10ebc76e523e99d8f0169c26c9cd78",
+      "status": "extracted",
+      "note": "Extracted by script from the chat transcript (tool result saved to disk) and HTML-unescaped; last Write of the file in that chat. Before-hash = extracted text."
     },
     {
       "source": "Script Shelf artifact database, document example-ps-folder-sizes (PS-001)",
       "original_filename": null,
-      "destination": "scripts/powershell/folder-sizes/folder_sizes.ps1",
+      "destination": "scripts/powershell/folder-sizes/versions/2026-10-22/folder_sizes.ps1",
       "size_bytes": 429,
       "sha256_before": "584474467c3ce0d8cc5795e24b33a529e05c5176dd781ad8805ff0547f8194b9",
       "sha256_after": "584474467c3ce0d8cc5795e24b33a529e05c5176dd781ad8805ff0547f8194b9",
@@ -53,51 +83,126 @@
       "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
     },
     {
+      "source": "Chat upload, 2026-11-07 (written in chat 'PowerShell microplate image grouping', 2026-11-06)",
+      "original_filename": "b31b3bce-Group-ImagesByWell.ps1",
+      "destination": "scripts/powershell/group-images-by-well/Group-ImagesByWell.ps1",
+      "size_bytes": 5305,
+      "sha256_before": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
+      "sha256_after": "fb09f931fb210f1d841a250dcf5060f2e7c8813d57f8ce38c6969ed5f5e0c32b",
+      "status": "verified",
+      "note": ""
+    },
+    {
+      "source": "past chat 'Automated file transfer script' (2026-11-05)",
+      "original_filename": "Lancer_Simulation.bat",
+      "destination": "scripts/powershell/move-export-to-network/Lancer_Simulation.bat",
+      "size_bytes": 192,
+      "sha256_before": "be32841d97d9ec18c517e8be8078e113d81a8626b7480c9b416ac56deff86c49",
+      "sha256_after": "be32841d97d9ec18c517e8be8078e113d81a8626b7480c9b416ac56deff86c49",
+      "status": "transcribed",
+      "note": "Written from the chat transcript as displayed (no byte-level source available). Not independently verifiable; compare with the file you received if you still have it."
+    },
+    {
+      "source": "past chat 'Automated file transfer script' (2026-11-05)",
+      "original_filename": "Lancer_Transfert.bat",
+      "destination": "scripts/powershell/move-export-to-network/Lancer_Transfert.bat",
+      "size_bytes": 182,
+      "sha256_before": "dbce9087b62c6379310c65fdf18e8013a222dfce913a0bd1ae956c953958983c",
+      "sha256_after": "dbce9087b62c6379310c65fdf18e8013a222dfce913a0bd1ae956c953958983c",
+      "status": "transcribed",
+      "note": "Written from the chat transcript as displayed (no byte-level source available). Not independently verifiable; compare with the file you received if you still have it."
+    },
+    {
+      "source": "past chat 'Automated file transfer script' (2026-11-05)",
+      "original_filename": "Move-ExportToNetwork.ps1",
+      "destination": "scripts/powershell/move-export-to-network/Move-ExportToNetwork.ps1",
+      "size_bytes": 5406,
+      "sha256_before": "74e1cabdef58ec08d1edc290b6278d1e2be283ca83bbb11c60fbf57558ebcc60",
+      "sha256_after": "74e1cabdef58ec08d1edc290b6278d1e2be283ca83bbb11c60fbf57558ebcc60",
+      "status": "reconstructed",
+      "note": "First version written from the chat transcript, then the 3 Edit operations of that chat replayed mechanically (each old text matched exactly once). Placeholder paths (\\\\SERVEUR\\Partage). The later working version with internal paths is not published."
+    },
+    {
+      "source": "past chat 'Automated file transfer script' (2026-11-05)",
+      "original_filename": "Move-ExportToNetwork.ps1",
+      "destination": "scripts/powershell/move-export-to-network/versions/2026-11-05-first/Move-ExportToNetwork.ps1",
+      "size_bytes": 4425,
+      "sha256_before": "5645e810805c5508183ff0e9d6d1706433744c77b95d7f284a6023a3d9428a78",
+      "sha256_after": "5645e810805c5508183ff0e9d6d1706433744c77b95d7f284a6023a3d9428a78",
+      "status": "transcribed",
+      "note": "Written from the chat transcript as displayed (no byte-level source available). Not independently verifiable; compare with the file you received if you still have it. First version, before the 3 edits."
+    },
+    {
+      "source": "past chat 'Script snippet library UI' (2026-10-27)",
+      "original_filename": "move_tiffs_to_images.ps1",
+      "destination": "scripts/powershell/move-tiffs-to-images/move_tiffs_to_images.ps1",
+      "size_bytes": 2700,
+      "sha256_before": "78633c32560010a5fd1f0e060eff3ed5d455c7dac0f9e7aad9ef25acb5120a07",
+      "sha256_after": "78633c32560010a5fd1f0e060eff3ed5d455c7dac0f9e7aad9ef25acb5120a07",
+      "status": "transcribed",
+      "note": "Written from the chat transcript as displayed (no byte-level source available). Not independently verifiable; compare with the file you received if you still have it."
+    },
+    {
+      "source": "past chat 'Script snippet library UI' (2026-10-27)",
+      "original_filename": "merge_csv_files.py",
+      "destination": "scripts/python/merge-csv-files/merge_csv_files.py",
+      "size_bytes": 977,
+      "sha256_before": "0bc53e0cc8296d4fe4b875673d0d39b48f26e98599574023277af83537e6e04e",
+      "sha256_after": "0bc53e0cc8296d4fe4b875673d0d39b48f26e98599574023277af83537e6e04e",
+      "status": "extracted",
+      "note": "Extracted by script from the chat transcript (tool result saved to disk) and HTML-unescaped; last Write of the file in that chat. Before-hash = extracted text."
+    },
+    {
       "source": "Script Shelf artifact database, document example-py-merge-csv (PY-001)",
       "original_filename": null,
-      "destination": "scripts/python/merge-csv-files/merge_csv_files.py",
+      "destination": "scripts/python/merge-csv-files/versions/2026-10-22/merge_csv_files.py",
       "size_bytes": 534,
       "sha256_before": "327db7bed8822857fb8af81afb3645e022f7725d92180ccfcc54015fcedc2028",
       "sha256_after": "327db7bed8822857fb8af81afb3645e022f7725d92180ccfcc54015fcedc2028",
       "status": "transcribed",
       "note": "Code field of a Script Shelf database entry (flagged 'example'), copied from a database read. No original file exists, so the file name was assigned during migration and the before-hash is of the copied text, not an independent source. Byte check possible later against Script Shelf > Export."
+    },
+    {
+      "source": "claude.ai artifact 'Code du Panier', 2026-11-02",
+      "original_filename": "ThisWorkbook.cls",
+      "destination": "scripts/vba/fridge-inventory-basket/ThisWorkbook.cls",
+      "size_bytes": 484,
+      "sha256_before": "98246c70f1c7d3cc58005ba856d0687c3a5f76d733b326355c3c24491c57e04b",
+      "sha256_after": "98246c70f1c7d3cc58005ba856d0687c3a5f76d733b326355c3c24491c57e04b",
+      "status": "transcribed",
+      "note": "Code copied from the claude.ai artifact page source (no file exists). Not byte-verifiable here; check the line count shown on the artifact page. Tab shows 14 lignes. Module name from the artifact tab; extension assigned during migration."
+    },
+    {
+      "source": "claude.ai artifact 'Code du Panier', 2026-11-02",
+      "original_filename": "modEquiperPanier.bas",
+      "destination": "scripts/vba/fridge-inventory-basket/modEquiperPanier.bas",
+      "size_bytes": 5472,
+      "sha256_before": "d05786cf71ee715c8160e4287281784762896140d9618e7ee7590d680041fa0f",
+      "sha256_after": "d05786cf71ee715c8160e4287281784762896140d9618e7ee7590d680041fa0f",
+      "status": "transcribed",
+      "note": "Code copied from the claude.ai artifact page source (no file exists). Not byte-verifiable here; check the line count shown on the artifact page. Tab shows 118 lignes. Module name from the artifact tab; extension assigned during migration."
+    },
+    {
+      "source": "claude.ai artifact 'Code du Panier', 2026-11-02",
+      "original_filename": "modPanier.bas",
+      "destination": "scripts/vba/fridge-inventory-basket/modPanier.bas",
+      "size_bytes": 23191,
+      "sha256_before": "89bd7e563d76a89af0a856fb4e3fdd20dd93a3a61556d55c23b299579c6a7c80",
+      "sha256_after": "89bd7e563d76a89af0a856fb4e3fdd20dd93a3a61556d55c23b299579c6a7c80",
+      "status": "transcribed",
+      "note": "Code copied from the claude.ai artifact page source (no file exists). Not byte-verifiable here; check the line count shown on the artifact page. Tab shows 489 lignes. Module name from the artifact tab; extension assigned during migration."
     }
   ],
   "not_migrated_yet": [
     {
-      "item": "Overlay_Viewer.ijm",
-      "where": "claude.ai artifact 'Overlay Viewer Macro' (…Q7Yq)",
-      "reason": "Waiting for the original file"
-    },
-    {
-      "item": "Overlay_Viewer_v2.ijm",
-      "where": "claude.ai artifact 'Overlay Viewer Macro' (…Vh8Q)",
-      "reason": "Waiting for the original file"
-    },
-    {
-      "item": "modPanier, modEquiperPanier, ThisWorkbook (VBA)",
-      "where": "claude.ai artifact 'Code du Panier'",
-      "reason": "Waiting for the original files; encoding to decide"
-    },
-    {
-      "item": "Report_Image_Browser.py (+ README, tests, archive)",
+      "item": "Report_Image_Browser.py v2.9.1 (+ README, tests, archive)",
       "where": "past chat 'Fiji image processing macro GUI'",
-      "reason": "Not reachable from this session"
+      "reason": "Built over many versions with scripted edits (incl. a spaces-to-tabs conversion) and ~100,000 characters: a reconstruction from the transcript could not be trusted. Needs the original file."
     },
     {
-      "item": "Move-ExportToNetwork.ps1 + Lancer_Transfert.bat",
-      "where": "past chat 'Automated file transfer script'",
-      "reason": "Not reachable; working copy holds internal network paths"
-    },
-    {
-      "item": "move_tiffs_to_images.ps1",
-      "where": "past chat 'Script snippet library UI'",
-      "reason": "Not reachable from this session"
-    },
-    {
-      "item": "Repo variants of the three examples (folder_sizes.ps1 with -Root, merge_csv_files.py with prompt)",
-      "where": "past chat 'Script snippet library UI'",
-      "reason": "Not reachable from this session"
+      "item": "Move-ExportToNetwork.ps1, current working version (progress display, archive folder next to the logs)",
+      "where": "past chat 'Automated file transfer script', turn 7 and later",
+      "reason": "Contains internal network paths and a local user path. Held back until approved."
     }
   ]
 }
