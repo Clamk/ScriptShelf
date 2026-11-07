@@ -220,6 +220,20 @@ main { flex: 1; padding-block: 28px 64px; outline: none; }
 .code__src { padding-inline: 16px 24px !important; color: #d6deeb; }
 .code__src:focus { outline: none; }
 .code__msg { padding: 22px 16px; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+.code__note { padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--warn-soft); color: var(--warn); font-size: 13px; }
+.file-tabs { display: flex; gap: 2px; overflow-x: auto; background: var(--bg-2); border-bottom: 1px solid var(--line); padding: 6px 6px 0; }
+.file-tab {
+  display: grid; gap: 1px; text-align: left; padding: 7px 12px 8px; border: 1px solid transparent; border-bottom: 0;
+  border-radius: 7px 7px 0 0; background: none; color: var(--muted); cursor: pointer; white-space: nowrap; flex: none;
+}
+.file-tab:hover { color: var(--text); background: var(--surface); }
+.file-tab[aria-selected="true"] { background: var(--surface); border-color: var(--line); color: var(--text); box-shadow: inset 0 2px 0 var(--accent); }
+.file-tab__name { font-family: var(--mono); font-size: 12.5px; }
+.file-tab__label { font-size: 11.5px; color: var(--faint); }
+.file-tab--version .file-tab__label { color: var(--warn); }
+.files li { display: block; }
+.files__label { color: var(--faint); font-size: 12.5px; }
+.files__note { color: var(--faint); font-size: 12.5px; margin-top: 2px; }
 
 .sx-com { color: var(--sx-com); font-style: italic; }
 .sx-str { color: var(--sx-str); }

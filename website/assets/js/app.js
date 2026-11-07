@@ -35,7 +35,8 @@
   // `code` spans for things that look like commands, paths or switches inside documented text
   function inline(s) {
     return esc(s).replace(/(^|[\s(])((?:\.\\|[A-Za-z]:\\|-[A-Za-z]|\$[A-Za-z_]|&lt;)[^\s,;)]*)/g, function (m, pre, tok) {
-      return pre + "<code>" + tok + "</code>";
+      var tail = (tok.match(/[.:]+$/) || [""])[0];   // sentence punctuation stays outside
+      return pre + "<code>" + tok.slice(0, tok.length - tail.length) + "</code>" + tail;
     });
   }
   function fileName(p) { return p.split("/").pop(); }
@@ -300,6 +301,17 @@
     }
     document.title = s.name + " · " + data.title;
     var file = fileName(s.path);
+    // every file of the script: main, supporting files, older/other versions
+    var files = [{ path: s.path, label: "Main", kind: "main" }]
+      .concat(s.supporting_files.map(function (f) { return { path: f.path, label: f.label, kind: "support" }; }))
+      .concat((s.versions || []).map(function (f) { return { path: f.path, label: f.label, kind: "version", date: f.date, note: f.note }; }));
+    var tabs = files.length > 1
+      ? '<div class="file-tabs" role="tablist" aria-label="Files of this script">' + files.map(function (f, i) {
+          return '<button type="button" role="tab" class="file-tab' + (f.kind === "version" ? " file-tab--version" : "") + '" data-file="' + i + '" aria-selected="' + (i === 0) + '">' +
+            '<span class="file-tab__name">' + esc(fileName(f.path)) + "</span>" +
+            '<span class="file-tab__label">' + esc(f.kind === "version" ? "version · " + f.label : f.label) + "</span></button>";
+        }).join("") + "</div>"
+      : "";
     var badge = s.example ? '<span class="badge badge--example">Example</span>' : (!s.tested_on ? '<span class="badge badge--untested">Untested</span>' : "");
     var facts = [
       ["Language", esc(s.language)],
@@ -311,9 +323,12 @@
     ].map(function (f) {
       return "<dt>" + f[0] + "</dt>" + (f[1] === null ? '<dd class="none">not documented</dd>' : "<dd>" + f[1] + "</dd>");
     }).join("");
-    var support = s.supporting_files.length
-      ? '<section class="panel"><h2>Supporting files</h2><ul class="files">' + s.supporting_files.map(function (f) {
-          return '<li><a href="' + esc(githubUrl(f.path)) + '" target="_blank" rel="noopener">' + esc(f.label) + " · " + esc(fileName(f.path)) + "</a></li>";
+    var support = files.length > 1
+      ? '<section class="panel"><h2>Files</h2><ul class="files">' + files.map(function (f) {
+          var label = f.kind === "version" ? "Version: " + f.label : f.label;
+          return '<li><a href="' + esc(githubUrl(f.path)) + '" target="_blank" rel="noopener">' + esc(fileName(f.path)) + "</a>" +
+            '<span class="files__label"> · ' + esc(label) + "</span>" +
+            (f.note ? '<div class="files__note">' + esc(f.note) + "</div>" : "") + "</li>";
         }).join("") + "</ul></section>"
       : "";
 
@@ -328,8 +343,8 @@
       '<p class="lede">' + esc(s.summary) + "</p>" +
       '<div class="actions">' +
       '<button type="button" class="btn btn--primary" id="copyBtn">' + ICON.copy + "<span>Copy code</span></button>" +
-      '<a class="btn" href="' + esc(s.path) + '" download="' + esc(file) + '">' + ICON.download + "<span>Download " + esc(file) + "</span></a>" +
-      '<a class="btn" href="' + esc(githubUrl(s.path)) + '" target="_blank" rel="noopener">' + ICON.gh + "<span>View on GitHub</span></a>" +
+      '<a class="btn" id="dlBtn" href="' + esc(s.path) + '" download="' + esc(file) + '">' + ICON.download + '<span id="dlLabel">Download ' + esc(file) + "</span></a>" +
+      '<a class="btn" id="ghBtn" href="' + esc(githubUrl(s.path)) + '" target="_blank" rel="noopener">' + ICON.gh + "<span>View on GitHub</span></a>" +
       "</div></header>" +
       '<div class="detail-body"><div>' +
       '<section class="panel"><h2>Description</h2><p>' + esc(s.description) + "</p></section>" +
@@ -342,38 +357,63 @@
       (s.warnings.length ? listPanel("Warnings and limitations", s.warnings, false, "panel--warn") : listPanel("Warnings and limitations", [])) +
       support +
       "</aside></div>" +
-      '<section class="code" aria-label="Source code">' +
-      '<div class="code__bar"><span class="code__file">' + esc(file) + '</span><span class="code__info" id="codeInfo">loading…</span></div>' +
+      '<section class="code" aria-label="Source code">' + tabs +
+      '<div class="code__bar"><span class="code__file" id="codeFile">' + esc(file) + '</span><span class="code__info" id="codeInfo">loading…</span></div>' +
+      '<div class="code__note" id="codeNote" hidden></div>' +
       '<div class="code__scroll" id="codeScroll"><div class="code__msg">Loading source…</div></div>' +
       "</section>";
     window.scrollTo(0, 0);
 
+    var current = files[0];
     var copyBtn = document.getElementById("copyBtn");
-    copyBtn.addEventListener("click", function () { copyCode(s, copyBtn); });
+    copyBtn.addEventListener("click", function () { copyCode(current.path, copyBtn); });
 
-    loadFile(s.path).then(function (text) {
-      if (!document.getElementById("codeScroll") || parseHash().id !== s.id) return;
-      var lines = text.split("\n").length - (text.endsWith("\n") ? 1 : 0);
-      var bytes = new TextEncoder().encode(text).length;
-      var nums = [];
-      for (var i = 1; i <= Math.max(lines, 1); i++) nums.push(i);
-      var lang = window.ShelfHighlight ? window.ShelfHighlight.highlight(text, s.extension) : esc(text);
-      document.getElementById("codeInfo").textContent = plural(lines, "line") + " · " + (bytes < 1024 ? bytes + " B" : (bytes / 1024).toFixed(1) + " KB");
-      document.getElementById("codeScroll").innerHTML =
-        '<div class="code__grid"><pre class="code__gutter" aria-hidden="true">' + nums.join("\n") + "</pre>" +
-        '<pre class="code__src" tabindex="0"><code id="codeText">' + lang + "</code></pre></div>";
-    }).catch(function (e) {
-      if (!document.getElementById("codeScroll")) return;
-      document.getElementById("codeInfo").textContent = "not loaded";
-      document.getElementById("codeScroll").innerHTML = '<div class="code__msg">Could not load <code>' + esc(s.path) + "</code> (" + esc(e.message) +
-        '). Try <a href="' + esc(githubUrl(s.path)) + '" target="_blank" rel="noopener">the file on GitHub</a>.</div>';
+    function showFile(f) {
+      current = f;
+      var name = fileName(f.path);
+      var ext = (name.match(/\.[^.]+$/) || [""])[0];
+      document.getElementById("codeFile").textContent = name;
+      document.getElementById("dlBtn").setAttribute("href", f.path);
+      document.getElementById("dlBtn").setAttribute("download", name);
+      document.getElementById("dlLabel").textContent = "Download " + name;
+      document.getElementById("ghBtn").setAttribute("href", githubUrl(f.path));
+      var note = document.getElementById("codeNote");
+      note.hidden = f.kind !== "version";
+      note.textContent = f.kind === "version" ? "Version: " + f.label + (f.date ? " (" + fmtDate(f.date) + ")" : "") + (f.note ? ". " + f.note : "") : "";
+      document.getElementById("codeInfo").textContent = "loading…";
+      loadFile(f.path).then(function (text) {
+        if (!document.getElementById("codeScroll") || parseHash().id !== s.id || current !== f) return;
+        var lines = text.split("\n").length - (text.endsWith("\n") ? 1 : 0);
+        var bytes = new TextEncoder().encode(text).length;
+        var nums = [];
+        for (var i = 1; i <= Math.max(lines, 1); i++) nums.push(i);
+        var lang = window.ShelfHighlight ? window.ShelfHighlight.highlight(text, ext) : esc(text);
+        document.getElementById("codeInfo").textContent = plural(lines, "line") + " · " + (bytes < 1024 ? bytes + " B" : (bytes / 1024).toFixed(1) + " KB");
+        document.getElementById("codeScroll").innerHTML =
+          '<div class="code__grid"><pre class="code__gutter" aria-hidden="true">' + nums.join("\n") + "</pre>" +
+          '<pre class="code__src" tabindex="0"><code id="codeText">' + lang + "</code></pre></div>";
+      }).catch(function (e) {
+        if (!document.getElementById("codeScroll") || current !== f) return;
+        document.getElementById("codeInfo").textContent = "not loaded";
+        document.getElementById("codeScroll").innerHTML = '<div class="code__msg">Could not load <code>' + esc(f.path) + "</code> (" + esc(e.message) +
+          '). Try <a href="' + esc(githubUrl(f.path)) + '" target="_blank" rel="noopener">the file on GitHub</a>.</div>';
+      });
+    }
+
+    var tabRow = document.querySelector(".file-tabs");
+    if (tabRow) tabRow.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-file]");
+      if (!b) return;
+      tabRow.querySelectorAll(".file-tab").forEach(function (x) { x.setAttribute("aria-selected", String(x === b)); });
+      showFile(files[+b.getAttribute("data-file")]);
     });
+    showFile(current);
   }
 
-  function copyCode(s, btn) {
+  function copyCode(path, btn) {
     var label = btn.querySelector("span");
     var reset = function () { setTimeout(function () { label.textContent = "Copy code"; btn.classList.remove("is-done"); }, 1800); };
-    loadFile(s.path).then(function (text) {
+    loadFile(path).then(function (text) {
       if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
       throw new Error("clipboard unavailable");
     }).then(function () {
@@ -405,7 +445,7 @@
     data = d;
     (d.categories || []).forEach(function (c) { catById[c.id] = c; });
     scripts = (d.scripts || []).map(function (s) {
-      var x = Object.assign({ tags: [], usage: [], inputs: [], outputs: [], warnings: [], requirements: [], supporting_files: [] }, s);
+      var x = Object.assign({ tags: [], usage: [], inputs: [], outputs: [], warnings: [], requirements: [], supporting_files: [], versions: [] }, s);
       x._hay = norm([x.name, x.id, x.summary, x.description, catLabel(x.category), x.language, x.tags.join(" "),
         x.usage.join(" "), x.requirements.join(" "), x.inputs.join(" "), x.outputs.join(" "), fileName(x.path)].join("\n"));
       byId[x.id] = x;

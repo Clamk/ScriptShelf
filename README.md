@@ -1,6 +1,6 @@
 # Script Shelf
 
-A catalogue of my scripts for high-content imaging and everyday lab data chores: Fiji macros, PowerShell, Python.
+A catalogue of my scripts for high-content imaging and everyday lab data chores: Fiji macros, PowerShell, Python, Excel VBA.
 
 - **Website:** https://clamk.github.io/ScriptShelf/ (search, filters, code preview, copy, download)
 - **Source of truth:** this repository. The scripts are plain files in `scripts/` and work without the website.
@@ -9,7 +9,8 @@ A catalogue of my scripts for high-content imaging and everyday lab data chores:
 
 ```
 scripts/<category>/<script-id>/   the scripts, stored exactly as written (one folder per script,
-                                  so supporting files such as a README or a launcher stay together)
+                                  so supporting files such as a README or a launcher stay together;
+                                  older or alternative versions go in versions/<date-or-label>/)
 catalogue/scripts.json            metadata for every script; the website reads it
 website/                          the static site (HTML, CSS, vanilla JavaScript, no dependencies)
 tools/build_site.py               validates the catalogue and assembles the site in _site/
@@ -35,6 +36,7 @@ Script metadata lives in the catalogue, not in the script files, so adding a scr
 | `summary`, `description` | one line for the card; full text for the script page |
 | `tags` | lowercase keywords used for filters and search |
 | `path`, `extension`, `supporting_files` | main file, its extension, extra files (`{path, label}`) |
+| `versions` | older or alternative files (`{path, label, date, note}`), shown as extra tabs |
 | `requirements`, `usage`, `inputs`, `outputs`, `warnings` | lists of short sentences |
 | `tested_on` | where it was actually run, e.g. `Fiji 2.14, Windows 10`, or `null` |
 | `example` | `true` for demo snippets |
