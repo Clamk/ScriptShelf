@@ -1,0 +1,3 @@
+# Scripts are stored and checked out byte for byte: no line-ending conversion,
+# so their SHA-256 matches migration/manifest.json on every machine.
+scripts/** -text
