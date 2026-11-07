@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "title": "Script Shelf",
-  "description": "Scripts for high-content imaging and everyday lab data chores: Fiji macros, PowerShell and Python.",
+  "description": "Scripts for high-content imaging and everyday lab data chores: Fiji macros, PowerShell, Python and Excel VBA.",
   "repository": {
     "owner": "Clamk",
     "name": "ScriptShelf",
@@ -10,7 +10,8 @@
   "categories": [
     { "id": "imagej", "label": "ImageJ / Fiji" },
     { "id": "powershell", "label": "PowerShell" },
-    { "id": "python", "label": "Python" }
+    { "id": "python", "label": "Python" },
+    { "id": "vba", "label": "Excel / VBA" }
   ],
   "scripts": [
     {
@@ -26,6 +27,7 @@
       "supporting_files": [
         { "path": "scripts/imagej/composite-batch/README.md", "label": "README" }
       ],
+      "versions": [],
       "requirements": [
         "Fiji / ImageJ 1.53t or newer",
         "Bio-Formats (bundled with Fiji) to open non-TIFF files such as Cellomics .C01"
@@ -58,6 +60,79 @@
       "added": "2026-11-07"
     },
     {
+      "id": "overlay-viewer",
+      "name": "Overlay Viewer",
+      "category": "imagej",
+      "language": "ImageJ macro",
+      "summary": "Browse microscopy images with their segmentation outlines on top, with one display setting for all images.",
+      "description": "You pick one image and its matching outline file as examples; the macro works out how the two file names differ, scans the plate folder including well subfolders, and pairs every image with its outline by name (well folder + name without the ending), so empty wells without a segmentation do not shift the pairing. A control window sets the display min/max and LUT once and applies them to every image while you browse; outlines are drawn in one colour with black transparent. All overlays can be exported as RGB PNG with the display settings burned in. The folder also holds Overlay_Viewer.ijm, a different variant of the same tool (see Warnings).",
+      "tags": ["overlay", "segmentation", "outlines", "cx7", "hcs studio", "viewer"],
+      "path": "scripts/imagej/overlay-viewer/Overlay_Viewer_v2.ijm",
+      "extension": ".ijm",
+      "supporting_files": [],
+      "versions": [
+        { "path": "scripts/imagej/overlay-viewer/Overlay_Viewer.ijm", "label": "Overlay_Viewer.ijm (other variant)", "date": "2026-10-19",
+          "note": "Learns the naming pattern from a picked pair, reads Cellomics .C01 outline files with a built-in Jython reader, and adds outline opacity and thickness, histogram, PNG/TIFF/JPEG export and a vertical-flip option." }
+      ],
+      "requirements": [
+        "Fiji / ImageJ 1.53k or newer",
+        "Overlay_Viewer.ijm variant: Bio-Formats and Fiji's Jython (both bundled with Fiji) for .C01 outlines"
+      ],
+      "usage": [
+        "Copy the macro, then in Fiji: Plugins > New > Macro, paste, then Run. To keep it, save it as Overlay_Viewer_v2.ijm in Fiji's macros folder.",
+        "Choose one microscopy image, then its matching outline file. The macro scans the plate folder.",
+        "Check what was detected (folder to scan, name endings of images and outlines), optionally tick 'Only show images that have an outline'.",
+        "In the control window, set display min/max, LUT and outline colour; OK applies them and re-opens the window. 'After OK' = Go to next steps through the images.",
+        "Tick 'Export all overlays as PNG' and choose a folder to save every overlay. Cancel quits; images stay open."
+      ],
+      "inputs": [
+        "Plate folder with microscopy images and outline images (e.g. exported from HCS Studio), optionally in well subfolders",
+        "Outline images: black (0) = background, any other grey = outline; same width and height as the image"
+      ],
+      "outputs": [
+        "NNNN_<image name>_overlay.png: RGB overlays with the display settings burned in"
+      ],
+      "warnings": [
+        "2D single-channel images: only the first plane of a stack is used.",
+        "An outline image of a different size is overlaid misaligned (a warning is logged).",
+        "Two variants are kept (Overlay_Viewer_v2.ijm and Overlay_Viewer.ijm); which one is current is not documented.",
+        "Copied from the claude.ai artifacts' displayed text: check the line count against the artifact page."
+      ],
+      "tested_on": null,
+      "example": false,
+      "created": "2026-10-19",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "batch-convert-to-tiff",
+      "name": "Batch convert a folder of images to TIFF",
+      "category": "imagej",
+      "language": "ImageJ macro",
+      "summary": "Open every file in a folder and save it as .tif in another folder.",
+      "description": "Asks for an input and an output folder, opens every file in the input folder and saves it as .tif in the output folder. Subfolders are skipped. Runs in batch mode, so no windows pop up.",
+      "tags": ["batch", "files", "conversion"],
+      "path": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
+      "extension": ".ijm",
+      "supporting_files": [],
+      "versions": [
+        { "path": "scripts/imagej/batch-convert-to-tiff/versions/2026-10-22/batch_convert_to_tiff.ijm", "label": "2026-10-22 (Script Shelf artifact)", "date": "2026-10-22",
+          "note": "Same code without the description header." }
+      ],
+      "requirements": [],
+      "usage": [
+        "Run the macro in Fiji, then choose the input folder and the output folder when asked."
+      ],
+      "inputs": ["Input folder of images"],
+      "outputs": ["One .tif per input file, in the output folder"],
+      "warnings": [
+        "Example snippet seeded when the Script Shelf was created; never tested."
+      ],
+      "tested_on": null,
+      "example": true,
+      "created": "2026-10-22",
+      "added": "2026-11-07"
+    },
+    {
       "id": "group-images-by-well",
       "name": "Group images by well",
       "category": "powershell",
@@ -68,6 +143,7 @@
       "path": "scripts/powershell/group-images-by-well/Group-ImagesByWell.ps1",
       "extension": ".ps1",
       "supporting_files": [],
+      "versions": [],
       "requirements": [
         "Windows PowerShell 2.0 (Windows 7) or later"
       ],
@@ -98,28 +174,91 @@
       "added": "2026-11-07"
     },
     {
-      "id": "batch-convert-to-tiff",
-      "name": "Batch convert a folder of images to TIFF",
-      "category": "imagej",
-      "language": "ImageJ macro",
-      "summary": "Open every file in a folder and save it as .tif in another folder.",
-      "description": "Asks for an input and an output folder, opens every file in the input folder and saves it as .tif in the output folder. Subfolders are skipped. Runs in batch mode, so no windows pop up.",
-      "tags": ["batch", "files", "conversion"],
-      "path": "scripts/imagej/batch-convert-to-tiff/batch_convert_to_tiff.ijm",
-      "extension": ".ijm",
-      "supporting_files": [],
-      "requirements": [],
-      "usage": [
-        "Run the macro in Fiji, then choose the input folder and the output folder when asked."
+      "id": "move-export-to-network",
+      "name": "Move exports to the network drive",
+      "category": "powershell",
+      "language": "PowerShell",
+      "summary": "Move local exports to a network share: copy, check size and date, and only then delete the original.",
+      "description": "Checks that the local export folder and the network destination are both reachable, and stops without touching anything otherwise. It takes the files not modified for N minutes (2 by default), copies each one to the network keeping the folder structure, compares size and modification date (2 s tolerance), and deletes the original only when both match; a failure keeps the original and is logged. First-level folders emptied by the transfer are moved into a \"_\" subfolder of the export folder, which is never scanned. A lock file prevents two runs at once and a log is written per month. Comments and messages are in French. Two double-click launchers come with it: a real run and a simulation.",
+      "tags": ["transfer", "network", "files", "backup", "cx7", "scheduled task"],
+      "path": "scripts/powershell/move-export-to-network/Move-ExportToNetwork.ps1",
+      "extension": ".ps1",
+      "supporting_files": [
+        { "path": "scripts/powershell/move-export-to-network/Lancer_Transfert.bat", "label": "Launcher (run)" },
+        { "path": "scripts/powershell/move-export-to-network/Lancer_Simulation.bat", "label": "Launcher (simulation)" }
       ],
-      "inputs": ["Input folder of images"],
-      "outputs": ["One .tif per input file, in the output folder"],
+      "versions": [
+        { "path": "scripts/powershell/move-export-to-network/versions/2026-11-05-first/Move-ExportToNetwork.ps1", "label": "First version", "date": "2026-11-05",
+          "note": "Deletes the emptied local subfolders instead of moving them into \"_\"." }
+      ],
+      "requirements": [
+        "Windows PowerShell 2.0 (Windows 7) or later",
+        "Write access to the network destination for the account that runs it"
+      ],
+      "usage": [
+        "Put Move-ExportToNetwork.ps1 and the two .bat launchers together in one folder outside the export folder, e.g. C:\\Outils_Transfert.",
+        "Open the .ps1 in Notepad and set the 4 lines under 'A MODIFIER': $SourceDir, $DestDir (prefer a \\\\server\\share UNC path to a drive letter), $MinAgeMinutes, $LogDir (outside $SourceDir).",
+        "Dry run: double-click Lancer_Simulation.bat (or run the script with -DryRun). It lists what would be moved and changes nothing.",
+        "Test on copies of a small export, then use Lancer_Transfert.bat for real transfers."
+      ],
+      "inputs": [
+        "$SourceDir: local export folder",
+        "$DestDir: network destination",
+        "$MinAgeMinutes: files modified more recently are skipped",
+        "-DryRun: simulation"
+      ],
+      "outputs": [
+        "Files moved to the network with the same folder structure",
+        "Emptied first-level folders moved to $SourceDir\\_",
+        "Monthly log transfer_<yyyy-MM>.log in $LogDir"
+      ],
       "warnings": [
-        "Example snippet seeded when the Script Shelf was created; never tested."
+        "Published version: 2026-11-05 with placeholder paths (\\\\SERVEUR\\Partage). A later working version (progress display, archive folder next to the logs) is not published because it contains internal network paths.",
+        "A file with the same name already at the destination is overwritten.",
+        "-DryRun does not simulate the archiving into \"_\".",
+        "Not run here: written without access to Windows."
       ],
       "tested_on": null,
-      "example": true,
-      "created": "2026-10-22",
+      "example": false,
+      "created": "2026-11-05",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "move-tiffs-to-images",
+      "name": "Move TIFFs into an images subfolder",
+      "category": "powershell",
+      "language": "PowerShell",
+      "summary": "Create an \"images\" subfolder and move every .tif / .tiff of the folder into it.",
+      "description": "Put the script in the folder that holds the TIFFs and run it. It creates an \"images\" subfolder there and moves every .tif / .tiff file of that folder into it. Subfolders are not searched. A file that already exists in images is skipped, never overwritten; a file still open in another program is reported and left in place. A summary shows how many files were moved, skipped or failed.",
+      "tags": ["files", "tiff", "organise"],
+      "path": "scripts/powershell/move-tiffs-to-images/move_tiffs_to_images.ps1",
+      "extension": ".ps1",
+      "supporting_files": [],
+      "versions": [],
+      "requirements": [
+        "Windows PowerShell 2.0 (Windows 7) or later"
+      ],
+      "usage": [
+        "Put the script in the folder with the TIFFs, then right-click it > Run with PowerShell.",
+        "Preview without moving anything: .\\move_tiffs_to_images.ps1 -WhatIf",
+        "Another folder or subfolder name: .\\move_tiffs_to_images.ps1 -Folder <folder> -Subfolder raw",
+        "If Windows blocks scripts: powershell -ExecutionPolicy Bypass -File .\\move_tiffs_to_images.ps1"
+      ],
+      "inputs": [
+        "-Folder: folder to process (default: the script's folder)",
+        "-Subfolder: name of the subfolder to create (default: images)"
+      ],
+      "outputs": [
+        "The subfolder, with the TIFFs moved into it",
+        "Console summary of moved, skipped and failed files"
+      ],
+      "warnings": [
+        "Moves files rather than copying them.",
+        "When started from the console host it waits for Enter before closing (last line of the script)."
+      ],
+      "tested_on": null,
+      "example": false,
+      "created": "2026-10-27",
       "added": "2026-11-07"
     },
     {
@@ -128,18 +267,22 @@
       "category": "powershell",
       "language": "PowerShell",
       "summary": "List each subfolder of a folder with its total size in GB, largest first.",
-      "description": "Lists each subfolder of $root with its total size in GB, sorted largest first. Handy before cleaning a data drive.",
+      "description": "Lists each subfolder with its total size in GB, sorted largest first. Handy before cleaning a data drive. Run it inside the folder to measure, or pass one with -Root.",
       "tags": ["disk space", "files"],
       "path": "scripts/powershell/folder-sizes/folder_sizes.ps1",
       "extension": ".ps1",
       "supporting_files": [],
+      "versions": [
+        { "path": "scripts/powershell/folder-sizes/versions/2026-10-22/folder_sizes.ps1", "label": "2026-10-22 (Script Shelf artifact)", "date": "2026-10-22",
+          "note": "Folder fixed in $root inside the script instead of the -Root parameter; no description header." }
+      ],
       "requirements": [
         "PowerShell 3.0 or newer (Windows 7 ships with 2.0)"
       ],
       "usage": [
-        "Set $root at the top of the script to the folder to measure, then run it."
+        "Run it inside the folder to measure, or pass one: .\\folder_sizes.ps1 -Root <folder>"
       ],
-      "inputs": ["$root: folder whose subfolders are measured"],
+      "inputs": ["-Root: folder whose subfolders are measured (default: current folder)"],
       "outputs": ["Table of subfolders with their size in GB"],
       "warnings": [
         "Example snippet seeded when the Script Shelf was created; never tested."
@@ -155,19 +298,23 @@
       "category": "python",
       "language": "Python",
       "summary": "Combine every CSV in a folder into combined.csv, tagging each row with its source file.",
-      "description": "Reads every .csv in the folder, adds a source_file column so you know where each row came from, and writes combined.csv. Skips its own output file if you run it twice.",
+      "description": "Asks for a folder, reads every .csv in it, adds a source_file column so you know where each row came from, and writes combined.csv in the same folder. Skips its own output file if you run it twice, and stops with a message when the folder has no CSV file.",
       "tags": ["csv", "pandas", "data"],
       "path": "scripts/python/merge-csv-files/merge_csv_files.py",
       "extension": ".py",
       "supporting_files": [],
+      "versions": [
+        { "path": "scripts/python/merge-csv-files/versions/2026-10-22/merge_csv_files.py", "label": "2026-10-22 (Script Shelf artifact)", "date": "2026-10-22",
+          "note": "Folder fixed in the script; no check for an empty folder; no description header." }
+      ],
       "requirements": [
         "Python 3",
         "pandas"
       ],
       "usage": [
-        "Set the folder path near the top of the script, then run it with Python."
+        "Run it with Python and type (or paste) the folder path when asked."
       ],
-      "inputs": ["Folder of .csv files"],
+      "inputs": ["Folder of .csv files (asked at start)"],
       "outputs": ["combined.csv in the same folder"],
       "warnings": [
         "Example snippet seeded when the Script Shelf was created; never tested."
@@ -175,6 +322,49 @@
       "tested_on": null,
       "example": true,
       "created": "2026-10-22",
+      "added": "2026-11-07"
+    },
+    {
+      "id": "fridge-inventory-basket",
+      "name": "Fridge inventory basket (Panier)",
+      "category": "vba",
+      "language": "Excel VBA",
+      "summary": "Double-click a tube's position in an Excel inventory to put it in the basket, take it out or put it back, with every action archived.",
+      "description": "Version 2 of the fridge-inventory 'Panier' macros. Each box in a sheet named \"Rack ...\" has a \"Panier\" column; double-clicking a position number puts the tube in the basket (a tick), then either marks it as taken out (position emptied) or puts it back. The \"Panier\" sheet is a view of all tubes in the basket, rebuilt whenever it is opened, and double-clicking one of its rows jumps to the tube. Every action is written to an \"Archive\" sheet first (date, user, action, location, tube contents). EquiperRacks sets the orange highlighting of basket rows by conditional formatting. Boxes are found from their merged \"Box ...\" title and header row, so no column number is fixed in the code. Comments and messages are in French.",
+      "tags": ["excel", "vba", "inventory", "freezer"],
+      "path": "scripts/vba/fridge-inventory-basket/modPanier.bas",
+      "extension": ".bas",
+      "supporting_files": [
+        { "path": "scripts/vba/fridge-inventory-basket/modEquiperPanier.bas", "label": "Module modEquiperPanier" },
+        { "path": "scripts/vba/fridge-inventory-basket/ThisWorkbook.cls", "label": "ThisWorkbook code" }
+      ],
+      "versions": [],
+      "requirements": [
+        "Excel, workbook saved as .xlsm (macros enabled)",
+        "Inventory sheets named \"Rack ...\" with the box layout of the \"Rack Modèle\" sheet: merged \"Box ...\" title, header row ending with \"Panier\", one numbered position per row"
+      ],
+      "usage": [
+        "Work on a copy of the stock file saved as .xlsm.",
+        "VBA editor (Alt+F11) > Insert > Module, paste modPanier (the main module).",
+        "Insert > Module, paste modEquiperPanier.",
+        "Double-click ThisWorkbook in the VBA editor and paste the ThisWorkbook code; nothing else goes in ThisWorkbook.",
+        "Alt+F8 > EquiperRacks once to set the orange highlighting; run it again after copying a box inside a sheet (not needed after copying a whole sheet).",
+        "Double-click a position number (first column of a box) to use the basket."
+      ],
+      "inputs": ["Sheets named \"Rack ...\" laid out as \"Rack Modèle\""],
+      "outputs": [
+        "\"Panier\" sheet: current basket, rebuilt on activation",
+        "\"Archive\" sheet: one row per action",
+        "Orange highlighting of tubes in the basket"
+      ],
+      "warnings": [
+        "The files are code to paste into the VBA editor: they have no export header, so File > Import is not the route.",
+        "Nothing happens when the workbook is open read-only (a message explains why).",
+        "Copied from the claude.ai artifact's displayed text: check the line counts against its tabs."
+      ],
+      "tested_on": null,
+      "example": false,
+      "created": "2026-11-02",
       "added": "2026-11-07"
     }
   ]

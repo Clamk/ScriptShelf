@@ -143,13 +143,22 @@ def validate_catalogue():
             used.add(full)
             if s.get("extension") and not s["path"].lower().endswith(s["extension"].lower()):
                 err(f"{sid}: extension '{s['extension']}' does not match {s['path']}")
-        for j, sf in enumerate(s.get("supporting_files") or []):
-            if not isinstance(sf, dict) or not sf.get("label"):
-                err(f"{sid}: supporting_files[{j}] needs a path and a label")
+        for field in ("supporting_files", "versions"):
+            items = s.get(field, [])
+            if not isinstance(items, list):
+                err(f"{sid}: '{field}' should be a list")
                 continue
-            f = safe_rel_path(sf.get("path"), f"supporting_files[{j}]", sid)
-            if f:
-                used.add(f)
+            for j, sf in enumerate(items):
+                if not isinstance(sf, dict) or not sf.get("label"):
+                    err(f"{sid}: {field}[{j}] needs a path and a label")
+                    continue
+                if sf.get("date") is not None and not DATE_RE.match(str(sf["date"])):
+                    err(f"{sid}: {field}[{j}].date must be YYYY-MM-DD")
+                f = safe_rel_path(sf.get("path"), f"{field}[{j}]", sid)
+                if f:
+                    if f in used:
+                        err(f"{sid}: {sf['path']} is listed twice")
+                    used.add(f)
         if not s.get("requirements"):
             warn(f"{sid}: no requirements documented")
         if not s.get("tested_on"):
