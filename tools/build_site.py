@@ -10,7 +10,6 @@ Used by the GitHub Actions workflow and for local previews:
 Errors stop the build. Warnings are printed but do not stop it.
 Standard library only, so it runs anywhere Python 3.8+ is installed.
 """
-import hashlib
 import json
 import re
 import shutil
@@ -19,7 +18,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOGUE = ROOT / "catalogue" / "scripts.json"
-MANIFEST = ROOT / "migration" / "manifest.json"
 WEBSITE = ROOT / "website"
 SCRIPTS = ROOT / "scripts"
 OUT = ROOT / "_site"
@@ -174,24 +172,6 @@ def validate_catalogue():
     return data
 
 
-def check_integrity():
-    """Compare files with the hashes recorded at migration (warnings only)."""
-    if not MANIFEST.is_file():
-        warn("no migration/manifest.json: integrity not checked")
-        return
-    try:
-        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        err(f"migration/manifest.json is not valid JSON: {e}")
-        return
-    for entry in manifest.get("files", []):
-        f = ROOT / entry["destination"]
-        if not f.is_file():
-            warn(f"manifest file missing: {entry['destination']}")
-        elif hashlib.sha256(f.read_bytes()).hexdigest() != entry.get("sha256_after"):
-            warn(f"changed since migration (expected if edited on purpose): {entry['destination']}")
-
-
 def scan_secrets():
     for f in sorted(SCRIPTS.rglob("*")):
         if not f.is_file() or f.stat().st_size > TEXT_LIMIT:
@@ -226,7 +206,6 @@ def build():
 def main():
     check_only = "--check" in sys.argv[1:]
     data = validate_catalogue()
-    check_integrity()
     scan_secrets()
     if not check_only and not errors:
         build()

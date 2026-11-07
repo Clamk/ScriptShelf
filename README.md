@@ -14,8 +14,6 @@ scripts/<category>/<script-id>/   the scripts, stored exactly as written (one fo
 catalogue/scripts.json            metadata for every script; the website reads it
 website/                          the static site (HTML, CSS, vanilla JavaScript, no dependencies)
 tools/build_site.py               validates the catalogue and assembles the site in _site/
-migration/manifest.json           where each migrated file came from, with SHA-256 hashes
-migration/NOTES.md                open items and suggested script improvements (not applied)
 .github/workflows/deploy.yml      validate, build and deploy to GitHub Pages on every push to main
 ```
 
@@ -55,18 +53,17 @@ python -m http.server -d _site 8000
 
 Then open http://localhost:8000. `python tools/build_site.py --check` only validates.
 The build stops on errors (invalid catalogue, missing file, something that looks like a key or token) and prints
-warnings for things worth a look (undocumented fields, network paths, e-mail addresses, files changed since migration).
+warnings for things worth a look (undocumented fields, network paths, e-mail addresses).
 
 ## Deployment
 
 GitHub Actions (`.github/workflows/deploy.yml`) runs on every push to `main` and can be started by hand from the
 Actions tab. One-time setup: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
 
-## Integrity
+## Line endings
 
-`.gitattributes` stores `scripts/` byte for byte (no line-ending conversion), so the hashes in
-`migration/manifest.json` stay valid on every machine. The build warns when a file no longer matches its migration hash,
-which is expected after an intentional edit.
+`.gitattributes` stores `scripts/` byte for byte (no line-ending conversion), so a script downloaded from the site
+or the repo is exactly the file that was committed.
 
 ## Licence
 
